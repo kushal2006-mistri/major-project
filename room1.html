@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Roomify - Virtual Room Organizer</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #e0f7fa;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      width: 100%;
+      background-color: #0077b6;
+      color: white;
+      padding: 30px 0;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .main-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: 40px;
+    }
+
+    #toolbar {
+      width: 180px;
+      padding: 20px 10px;
+      background-color: #d3f2f8;
+      border-right: 2px solid #0077b6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .item-button {
+      background-color: #8dc8e7;
+      border: none;
+      color: white;
+      padding: 10px;
+      font-size: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+    }
+
+    .item-button img {
+      width: 30px;
+      height: 30px;
+    }
+
+    .item-button:hover {
+      background-color: #5077ad;
+    }
+
+   #rectangle {
+      background-color: white;
+      border: 3px dashed #0077b6;
+      border-radius: 16px;
+      position: relative;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease-in-out;
+      margin-left: 30px;
+    }
+    #grid-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
+  background-size: 40px 40px; /* You can change grid cell size here */
+  pointer-events: none; /* So it won't block furniture drag */
+  z-index: 0;
+  border-radius: 16px;
+}
+
+
+    .furniture {
+      width: 80px;
+      height: 80px;
+      position: absolute;
+      cursor: move;
+      user-select: none;
+    }
+
+    .furniture img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .furniture-controls {
+      position: absolute;
+      top: -12px;
+      right: -12px;
+      display: flex;
+      gap: 4px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .furniture:hover .furniture-controls {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .furniture-controls button {
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      font-size: 12px;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .furniture-controls button:hover {
+      background-color: #023e8a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Roomify</h1>
+  </header>
+
+  <div class="main-container">
+    <div id="toolbar">
+      <button class="item-button" onclick="addFurniture('chair1')">
+        <img src="images/furniture/chair1.png" alt="Chair 1">
+        Chair 1
+      </button>
+      <button class="item-button" onclick="addFurniture('table1')">
+        <img src="images/furniture/table1.png" alt="Table">
+        Table 1
+      </button>
+      <button class="item-button" onclick="addFurniture('ac')">
+        <img src="images/furniture/ac.png" alt="AC">
+        AC
+      </button>
+      <button class="item-button" onclick="addFurniture('almari')">
+        <img src="images/furniture/almari.png" alt="Almari">
+        Almari
+      </button>
+      <button class="item-button" onclick="addFurniture('bookself')">
+        <img src="images/furniture/bookself.png" alt="Bookself">
+        Bookself
+      </button>
+      <button class="item-button" onclick="addFurniture('light')">
+        <img src="images/furniture/light.png" alt="Light">
+        light
+      </button>
+      <button class="item-button" onclick="addFurniture('mirror')">
+        <img src="images/furniture/mirror.png" alt="Mirror">
+        Mirror
+      </button>
+      <button class="item-button" onclick="addFurniture('projectbed')">
+        <img src="images/furniture/projectbed.png" alt="Bed">
+        Bed
+      </button>
+      <button class="item-button" onclick="addFurniture('projectsofa')">
+        <img src="images/furniture/projectsofa.png" alt="Sofa">
+        Sofa
+      </button>
+      <button class="item-button" onclick="addFurniture('tvtable')">
+        <img src="images/furniture/tvtable.png" alt="TV Table">
+        TV Table
+      </button>
+       <button class="item-button" onclick="addFurniture('computertable')">
+        <img src="images/furniture/computertable.png" alt="computer Table">
+        Computer Table
+      </button>
+       <button class="item-button" onclick="addFurniture('smalltable')">
+        <img src="images/furniture/smalltable.png" alt="smalll Table"> 
+        Small Table
+      </button>
+    </div>
+
+    <div id="rectangle">
+      <div id="grid-overlay"></div>
+    </div>
+  </div>
+
+  <script>
+    const room = document.getElementById('rectangle');
+
+    const furnitureImages = {
+      chair1: "images/furniture/chair1.png",
+      table1: "images/furniture/table1.png",
+      ac: "images/furniture/ac.png",
+      almari: "images/furniture/almari.png",
+      bookself: "images/furniture/bookself.png",
+      light: "images/furniture/light.png",
+      mirror: "images/furniture/mirror.png",
+      projectbed: "images/furniture/projectbed.png",
+      projectsofa: "images/furniture/projectsofa.png",
+      tvtable: "images/furniture/tvtable.png",
+      computertable: "images/furniture/computertable.png",
+      smalltable: "images/furniture/smalltable.png"};
+
+    function addFurniture(type) {
+      const furniture = document.createElement('div');
+      furniture.classList.add('furniture');
+      furniture.style.left = '10px';
+      furniture.style.top = '10px';
+      furniture.style.width = '80px';
+      furniture.style.height = '80px';
+      furniture.style.transform = 'rotate(0deg)';
+      furniture.setAttribute('data-rotation', '0');
+
+      const img = document.createElement('img');
+      img.src = furnitureImages[type];
+      img.alt = type;
+
+      const controls = document.createElement('div');
+      controls.classList.add('furniture-controls');
+
+      // Increase size
+      const increaseBtn = document.createElement('button');
+      increaseBtn.textContent = '+';
+      increaseBtn.title = 'Increase Size';
+      increaseBtn.onclick = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        const width = furniture.offsetWidth + 10;
+        const height = furniture.offsetHeight + 10;
+        furniture.style.width = width + 'px';
+        furniture.style.height = height + 'px';
+      };
+
+      // Decrease size
+      const decreaseBtn = document.createElement('button');
+      decreaseBtn.textContent = '–';
+      decreaseBtn.title = 'Decrease Size';
+      decreaseBtn.onclick = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        const width = Math.max(30, furniture.offsetWidth - 10);
+        const height = Math.max(30, furniture.offsetHeight - 10);
+        furniture.style.width = width + 'px';
+        furniture.style.height = height + 'px';
+      };
+
+      // Rotate
+      const rotateBtn = document.createElement('button');
+      rotateBtn.textContent = '⤾';
+      rotateBtn.title = 'Rotate';
+      rotateBtn.onclick = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        let rotation = parseInt(furniture.getAttribute('data-rotation')) || 0;
+        rotation = (rotation + 90) % 360;
+        furniture.setAttribute('data-rotation', rotation.toString());
+        furniture.style.transform = rotate($,{rotation},deg);
+      };
+
+      // Remove
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '✕';
+      deleteBtn.title = 'Remove';
+      deleteBtn.onclick = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        furniture.remove();
+      };
+
+      controls.appendChild(increaseBtn);
+      controls.appendChild(decreaseBtn);
+      controls.appendChild(rotateBtn);
+      controls.appendChild(deleteBtn);
+
+      furniture.appendChild(img);
+      furniture.appendChild(controls);
+      room.appendChild(furniture);
+
+      let offsetX = 0, offsetY = 0, isDragging = false;
+
+      furniture.addEventListener('mousedown', function (e) {
+        if (e.target.tagName === 'BUTTON') return;
+        isDragging = true;
+        offsetX = e.offsetX;
+        offsetY = e.offsetY;
+        furniture.style.zIndex = 1000;
+      });
+
+      document.addEventListener('mousemove', function (e) {
+        if (!isDragging) return;
+
+        const rect = room.getBoundingClientRect();
+        let x = e.clientX - rect.left - offsetX;
+        let y = e.clientY - rect.top - offsetY;
+
+        x = Math.max(0, Math.min(x, rect.width - furniture.offsetWidth));
+        y = Math.max(0, Math.min(y, rect.height - furniture.offsetHeight));
+
+        furniture.style.left = x + 'px';
+        furniture.style.top = y + 'px';
+      });
+
+      document.addEventListener('mouseup', function () {
+        isDragging = false;
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const width = localStorage.getItem('roomWidth') || 600;
+      const height = localStorage.getItem('roomHeight') || 400;
+
+      room.style.width = width + 'px';
+      room.style.height = height + 'px';
+    });
+  </script>
+
+</body>
+</html>

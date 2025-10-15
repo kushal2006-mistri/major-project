@@ -1,0 +1,104 @@
+body{
+    background-color: skyblue;
+    font-family: 'Roboto', sans-serif;
+}
+header {
+    display: flex;
+    align-items: center; /* Aligns content vertically */
+    justify-content: flex-start; /* Aligns content to the left */
+    padding: 10px 20px; /* Adds spacing around the header */
+    background-color: skyblue; /* Optional: Add a background color */
+}
+
+header h1 {
+    font-size: 24px; /* Adjust the font size as needed */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+    color: black; /* Optional: Set the text color */
+}
+
+ .signup-box{
+    width: 360px;
+    height: 580px;
+    margin:auto;
+    background-color: rgb(255, 255, 255);
+    border-radius: 3px;
+}
+
+
+.login-box{
+    width: 360px;
+    height:340px;
+    margin: auto;
+    border-radius: 3px;
+    background-color: white;
+    border-radius: 3px;
+
+}
+h1{
+    text-align: center;
+    padding-top: 15px;
+
+    margin-bottom: 20px;
+}
+h3{
+    text-align:center; 
+}
+
+form{
+    width: 300px;
+    margin-left:20px;
+}
+
+form label{
+    display: flex;
+    margin-top: 20px;
+    font-size:18px;
+}
+form input {
+    width: 100%;
+    padding: 7px;
+    border: 2px solid gray; /* Corrected border */
+    border-radius: 6px;
+    outline: none;
+    box-sizing: border-box; /* Ensures padding doesn't affect width */
+}
+input[type="button"]{
+    width: 320px;
+    height: 35px;
+    margin-top: 20 px;
+    border: none;
+    background-color:  #49c1a2;
+    font-size: 18px;
+
+}
+p{
+    text-align: center;
+    padding-top: 20px;
+    font-size: 15px;
+}
+.para-2{
+    text-align: center;
+    color: rgb(0, 0, 0);
+    font-size: 15px;
+    margin-top: -10px;
+
+}
+
+.para-2 a{
+    color: blue;
+}
+button {
+    background-color: #000000; /* Matching color for the webpage */
+    color: white; /* Text color */
+    border: none; /* Remove default border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px 20px; /* Add padding for a better look */
+    font-size: 16px; /* Increase font size */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    transition: background-color 0.3s ease; /* Smooth hover effect */
+}
+
+button:hover {
+    background-color: #5a6491; /* Slightly darker shade on hover */
+}

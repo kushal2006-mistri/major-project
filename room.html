@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Set Room Size - Roomify</title>
+  <style>
+    body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: 
+      url('WhatsApp\ Image\ 2025-07-31\ at\ 20.16.51_fe58f86a.jpg');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      margin-top: 280px; /* Adjusted to center the content */
+      overflow-x: hidden;
+    }
+
+
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 25px 50px;
+      background-color: rgba(255, 255, 255, 0.3); /* semi-transparent white */
+      position: absolute;
+      top: 0;
+      width: 100%;
+      backdrop-filter: blur(5px);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 2.5rem;
+      letter-spacing: 2px;
+    }
+
+    .container {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 400px;
+
+      margin: 60px auto 0 auto;  /* ✅ Center horizontally */
+    }
+
+
+    .container input {
+      display: block;
+      width: 250px;
+      margin: 15px auto;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid #0077b6;
+      border-radius: 10px;
+      outline: none;
+    }
+
+    .container button {
+      margin-top: 20px;
+      padding: 12px 25px;
+      background-color: #0077b6;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    .container button:hover {
+      background-color: #023e8a;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>Roomify</h1>
+  </header>
+
+  <div class="container">
+    <h2>Set Your Room Dimensions</h2>
+    <input id="roomWidth" type="number" placeholder="Width (in px)">
+    <input id="roomHeight" type="number" placeholder="Height (in px)">
+    <button onclick="goToPlanner()">Create Room</button>
+  </div>
+
+  <script>
+    function goToPlanner() {
+      const width = document.getElementById('roomWidth').value;
+      const height = document.getElementById('roomHeight').value;
+
+      if (!width || !height || width <= 0 || height <= 0) {
+        alert("Please enter valid positive values for width and height.");
+        return;
+      }
+
+      localStorage.setItem('roomWidth', width);
+      localStorage.setItem('roomHeight', height);
+      window.location.href = 'room1.html';
+    }
+  </script>
+  <footer class="glass-footer">
+        <p>&copy; 2025 Roomify. All Rights Reserved.</p>
+  </footer>
+
+</body>
+</html>
