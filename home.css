@@ -11,7 +11,7 @@ html, body {
   padding: 0;
   background: 
     linear-gradient(to right, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0) 40%),
-    url('WhatsApp\ Image\ 2025-07-31\ at\ 20.16.51_fe58f86a.jpg');
+    url('room.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -90,7 +90,7 @@ nav a {
 .content p {
   font-size: 16px;
   line-height: 1.6;
-  color: #2f4f5f;
+  color: #294b5c;
 }
 
 .start-btn {
