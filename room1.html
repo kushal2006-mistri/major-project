@@ -1,342 +1,650 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Roomify - Virtual Room Organizer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #e0f7fa;
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+        "Roboto", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
+      background: #e6f6ff;
+      color: #222;
     }
 
     header {
-      width: 100%;
-      background-color: #0077b6;
-      color: white;
-      padding: 30px 0;
-      text-align: center;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      background: #ffffff;
+      padding: 14px 28px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
     }
 
     header h1 {
-      margin: 0;
-      font-size: 2.5rem;
-      letter-spacing: 2px;
+      font-size: 22px;
+      letter-spacing: 1px;
     }
 
-    .main-container {
+    .scale-info {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    .main-layout {
+      flex: 1;
       display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-top: 40px;
+      min-height: 0;
     }
 
+    /* Left toolbar */
     #toolbar {
-      width: 180px;
-      padding: 20px 10px;
-      background-color: #d3f2f8;
-      border-right: 2px solid #0077b6;
+      width: 220px;
+      background: #ccefff;
+      border-right: 1px solid #a8ddf7;
+      padding: 18px 12px;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      gap: 15px;
+      gap: 10px;
+      overflow-y: auto;
     }
 
-    .item-button {
-      background-color: #8dc8e7;
+    #toolbar h2 {
+      font-size: 16px;
+      margin-bottom: 6px;
+    }
+
+    .tool-btn {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
       border: none;
-      color: white;
-      padding: 10px;
-      font-size: 14px;
-      border-radius: 10px;
+      text-align: left;
       cursor: pointer;
+      background: #8dd2ff;
+      color: #05496b;
+      font-size: 14px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 100%;
+      justify-content: space-between;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+      transition: transform 0.1s ease, box-shadow 0.1s ease,
+        background 0.1s ease;
     }
 
-    .item-button img {
-      width: 30px;
-      height: 30px;
+    .tool-btn span.label {
+      flex: 1;
     }
 
-    .item-button:hover {
-      background-color: #5077ad;
+    .tool-btn small {
+      font-size: 11px;
+      opacity: 0.85;
     }
 
-   #rectangle {
-      background-color: white;
-      border: 3px dashed #0077b6;
-      border-radius: 16px;
+    .tool-btn:hover {
+      background: #7fcbff;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 7px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Right workspace */
+    .workspace {
+      flex: 1;
+      padding: 14px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      overflow: hidden;
+    }
+
+    .room-wrapper {
+      flex: 1;
+      display: flex;
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.25);
+      background: #f9fdff;
+    }
+
+    /* Rulers */
+    .ruler-top {
+      height: 26px;
+      display: flex;
+      align-items: flex-end;
+      padding-left: 40px;
+      font-size: 11px;
+      color: #555;
+      gap: 0;
+    }
+
+    .ruler-top .tick {
       position: relative;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease-in-out;
-      margin-left: 30px;
+      text-align: center;
+      border-left: 1px solid #b0c6d0;
+      padding-top: 8px;
     }
-    #grid-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-image:
-    linear-gradient(to right, rgba(0,0,0,0.1) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0,0,0,0.1) 1px, transparent 1px);
-  background-size: 40px 40px; /* You can change grid cell size here */
-  pointer-events: none; /* So it won't block furniture drag */
-  z-index: 0;
-  border-radius: 16px;
-}
 
+    .ruler-top .tick span {
+      position: relative;
+      top: -2px;
+    }
+
+    .room-and-left {
+      flex: 1;
+      display: flex;
+      min-height: 0;
+    }
+
+    .ruler-left {
+      width: 40px;
+      border-right: 1px solid #b0c6d0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      font-size: 11px;
+      color: #555;
+      padding-top: 0;
+    }
+
+    .ruler-left .tick {
+      position: relative;
+      width: 100%;
+      border-top: 1px solid #b0c6d0;
+      padding-right: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    /* Room canvas */
+    #room {
+      position: relative;
+      flex: 1;
+      background-image: linear-gradient(
+          to right,
+          rgba(180, 205, 220, 0.4) 1px,
+          transparent 1px
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(180, 205, 220, 0.4) 1px,
+          transparent 1px
+        );
+      background-size: 20px 20px; /* visual grid, not measurement */
+      background-color: #ffffff;
+      overflow: hidden;
+    }
+
+    #room-inner {
+      position: absolute;
+      top: 0;
+      left: 0;
+      border: 2px dashed #0078c9;
+      background: repeating-linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.03) 0,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        ),
+        repeating-linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0.03) 0,
+          rgba(0, 0, 0, 0.03) 1px,
+          transparent 1px,
+          transparent 10px
+        );
+    }
 
     .furniture {
-      width: 80px;
-      height: 80px;
       position: absolute;
+      border-radius: 8px;
+      background: #ffc56b;
+      border: 2px solid #f59600;
       cursor: move;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      font-size: 11px;
+      padding: 4px 6px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.25);
       user-select: none;
     }
 
-    .furniture img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
+    .furniture.selected {
+      border-color: #0070ff;
+      box-shadow: 0 0 0 2px rgba(0, 112, 255, 0.4);
     }
 
-    .furniture-controls {
-      position: absolute;
-      top: -12px;
-      right: -12px;
-      display: flex;
-      gap: 4px;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease;
+    .f-title {
+      font-weight: 600;
+      margin-bottom: 2px;
+      font-size: 11px;
     }
 
-    .furniture:hover .furniture-controls {
-      opacity: 1;
-      pointer-events: auto;
+    .f-size {
+      font-size: 10px;
+      opacity: 0.8;
     }
 
-    .furniture-controls button {
-      background-color: #0077b6;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 12px;
-      cursor: pointer;
-      padding: 0;
+    /* Properties panel */
+    #properties-panel {
+      margin-top: 6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: #ffffff;
+      box-shadow: 0 2px 7px rgba(0, 0, 0, 0.18);
       display: flex;
       align-items: center;
-      justify-content: center;
+      gap: 12px;
+      font-size: 13px;
     }
 
-    .furniture-controls button:hover {
-      background-color: #023e8a;
+    #properties-panel input {
+      width: 60px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #b0c6d0;
+      font-size: 12px;
+    }
+
+    #properties-panel span.label {
+      font-weight: 500;
+    }
+
+    footer {
+      padding: 10px 18px 14px;
+      font-size: 13px;
+      text-align: center;
+      background: #e6f6ff;
+    }
+
+    @media (max-width: 820px) {
+      .main-layout {
+        flex-direction: column;
+      }
+      #toolbar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        max-height: 140px;
+      }
+      .workspace {
+        padding: 10px;
+      }
     }
   </style>
 </head>
 <body>
-
   <header>
-    <h1>Roomify</h1>
+    <h1>Roomify - Virtual Room Organizer</h1>
+    <div class="scale-info" id="scale-info">Scale: 1 ft = 100 px</div>
   </header>
 
-  <div class="main-container">
-    <div id="toolbar">
-      <button class="item-button" onclick="addFurniture('chair1')">
-        <img src="images/furniture/chair1.png" alt="Chair 1">
-        Chair 1
+  <main class="main-layout">
+    <!-- TOOLBAR -->
+    <aside id="toolbar">
+      <h2>Furniture</h2>
+      <!-- data-w, data-h in feet (default size) -->
+      <button class="tool-btn" data-name="Chair" data-w="2" data-h="2">
+        <span class="label">Chair</span>
+        <small>2×2 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('table1')">
-        <img src="images/furniture/table1.png" alt="Table">
-        Table 1
+      <button class="tool-btn" data-name="Table" data-w="3" data-h="3">
+        <span class="label">Table</span>
+        <small>3×3 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('ac')">
-        <img src="images/furniture/ac.png" alt="AC">
-        AC
+      <button class="tool-btn" data-name="Bed" data-w="6" data-h="3">
+        <span class="label">Bed</span>
+        <small>6×3 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('almari')">
-        <img src="images/furniture/almari.png" alt="Almari">
-        Almari
+      <button class="tool-btn" data-name="Sofa" data-w="5" data-h="3">
+        <span class="label">Sofa</span>
+        <small>5×3 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('bookself')">
-        <img src="images/furniture/bookself.png" alt="Bookself">
-        Bookself
+      <button class="tool-btn" data-name="Almari" data-w="4" data-h="2">
+        <span class="label">Almari</span>
+        <small>4×2 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('light')">
-        <img src="images/furniture/light.png" alt="Light">
-        light
+      <button class="tool-btn" data-name="Bookshelf" data-w="3" data-h="1.5">
+        <span class="label">Bookshelf</span>
+        <small>3×1.5 ft</small>
       </button>
-      <button class="item-button" onclick="addFurniture('mirror')">
-        <img src="images/furniture/mirror.png" alt="Mirror">
-        Mirror
-      </button>
-      <button class="item-button" onclick="addFurniture('projectbed')">
-        <img src="images/furniture/projectbed.png" alt="Bed">
-        Bed
-      </button>
-      <button class="item-button" onclick="addFurniture('projectsofa')">
-        <img src="images/furniture/projectsofa.png" alt="Sofa">
-        Sofa
-      </button>
-      <button class="item-button" onclick="addFurniture('tvtable')">
-        <img src="images/furniture/tvtable.png" alt="TV Table">
-        TV Table
-      </button>
-       <button class="item-button" onclick="addFurniture('computertable')">
-        <img src="images/furniture/computertable.png" alt="computer Table">
-        Computer Table
-      </button>
-       <button class="item-button" onclick="addFurniture('smalltable')">
-        <img src="images/furniture/smalltable.png" alt="smalll Table"> 
-        Small Table
-      </button>
-    </div>
+    </aside>
 
-    <div id="rectangle">
-      <div id="grid-overlay"></div>
-    </div>
-  </div>
+    <!-- WORKSPACE -->
+    <section class="workspace">
+      <div class="room-wrapper">
+        <div class="ruler-left" id="ruler-left"></div>
+
+        <div class="room-and-left">
+          <div id="room">
+            <div id="room-inner"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ruler-top" id="ruler-top"></div>
+
+      <!-- Furniture properties -->
+      <div id="properties-panel">
+        <span class="label">Selected:</span>
+        <span id="selected-name">None</span>
+
+        <span>| Width (ft):</span>
+        <input type="number" id="prop-width" step="0.1" />
+
+        <span>Height (ft):</span>
+        <input type="number" id="prop-height" step="0.1" />
+      </div>
+    </section>
+  </main>
+
+  <footer>© 2025 Roomify, All Rights Reserved.</footer>
 
   <script>
-    const room = document.getElementById('rectangle');
+    // --- CONFIG ---
+    const SCALE = 10; // 1ft = 10px
 
-    const furnitureImages = {
-      chair1: "images/furniture/chair1.png",
-      table1: "images/furniture/table1.png",
-      ac: "images/furniture/ac.png",
-      almari: "images/furniture/almari.png",
-      bookself: "images/furniture/bookself.png",
-      light: "images/furniture/light.png",
-      mirror: "images/furniture/mirror.png",
-      projectbed: "images/furniture/projectbed.png",
-      projectsofa: "images/furniture/projectsofa.png",
-      tvtable: "images/furniture/tvtable.png",
-      computertable: "images/furniture/computertable.png",
-      smalltable: "images/furniture/smalltable.png"};
+    const room = document.getElementById("room");
+    const roomInner = document.getElementById("room-inner");
+    const rulerTop = document.getElementById("ruler-top");
+    const rulerLeft = document.getElementById("ruler-left");
+    const scaleInfo = document.getElementById("scale-info");
 
-    function addFurniture(type) {
-      const furniture = document.createElement('div');
-      furniture.classList.add('furniture');
-      furniture.style.left = '10px';
-      furniture.style.top = '10px';
-      furniture.style.width = '80px';
-      furniture.style.height = '80px';
-      furniture.style.transform = 'rotate(0deg)';
-      furniture.setAttribute('data-rotation', '0');
+    const propertiesPanel = {
+      name: document.getElementById("selected-name"),
+      w: document.getElementById("prop-width"),
+      h: document.getElementById("prop-height"),
+    };
 
-      const img = document.createElement('img');
-      img.src = furnitureImages[type];
-      img.alt = type;
+    scaleInfo.textContent = `Scale: 1 ft = ${SCALE} px`;
 
-      const controls = document.createElement('div');
-      controls.classList.add('furniture-controls');
+    // furniture state (in feet)
+    const furnitureState = {}; // id -> { xFt, yFt, wFt, hFt, el, name }
+    let nextId = 1;
+    let selectedId = null;
 
-      // Increase size
-      const increaseBtn = document.createElement('button');
-      increaseBtn.textContent = '+';
-      increaseBtn.title = 'Increase Size';
-      increaseBtn.onclick = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const width = furniture.offsetWidth + 10;
-        const height = furniture.offsetHeight + 10;
-        furniture.style.width = width + 'px';
-        furniture.style.height = height + 'px';
-      };
+    // dragging
+    let draggingId = null;
+    let dragOffsetPx = { x: 0, y: 0 };
 
-      // Decrease size
-      const decreaseBtn = document.createElement('button');
-      decreaseBtn.textContent = '–';
-      decreaseBtn.title = 'Decrease Size';
-      decreaseBtn.onclick = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        const width = Math.max(30, furniture.offsetWidth - 10);
-        const height = Math.max(30, furniture.offsetHeight - 10);
-        furniture.style.width = width + 'px';
-        furniture.style.height = height + 'px';
-      };
+    // --- INIT ROOM FROM localStorage ---
+    function initRoomSize() {
+      const widthFt =
+        parseFloat(localStorage.getItem("roomWidthFt")) || 10;
+      const heightFt =
+        parseFloat(localStorage.getItem("roomHeightFt")) || 10;
 
-      // Rotate
-      const rotateBtn = document.createElement('button');
-      rotateBtn.textContent = '⤾';
-      rotateBtn.title = 'Rotate';
-      rotateBtn.onclick = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        let rotation = parseInt(furniture.getAttribute('data-rotation')) || 0;
-        rotation = (rotation + 90) % 360;
-        furniture.setAttribute('data-rotation', rotation.toString());
-        furniture.style.transform = rotate($,{rotation},deg);
-      };
+      const widthPx = widthFt * SCALE;
+      const heightPx = heightFt * SCALE;
 
-      // Remove
-      const deleteBtn = document.createElement('button');
-      deleteBtn.textContent = '✕';
-      deleteBtn.title = 'Remove';
-      deleteBtn.onclick = function (e) {
-        e.stopPropagation();
-        e.preventDefault();
-        furniture.remove();
-      };
+      // roomInner is the actual "measured" room
+      roomInner.style.width = widthPx + "px";
+      roomInner.style.height = heightPx + "px";
 
-      controls.appendChild(increaseBtn);
-      controls.appendChild(decreaseBtn);
-      controls.appendChild(rotateBtn);
-      controls.appendChild(deleteBtn);
-
-      furniture.appendChild(img);
-      furniture.appendChild(controls);
-      room.appendChild(furniture);
-
-      let offsetX = 0, offsetY = 0, isDragging = false;
-
-      furniture.addEventListener('mousedown', function (e) {
-        if (e.target.tagName === 'BUTTON') return;
-        isDragging = true;
-        offsetX = e.offsetX;
-        offsetY = e.offsetY;
-        furniture.style.zIndex = 1000;
-      });
-
-      document.addEventListener('mousemove', function (e) {
-        if (!isDragging) return;
-
-        const rect = room.getBoundingClientRect();
-        let x = e.clientX - rect.left - offsetX;
-        let y = e.clientY - rect.top - offsetY;
-
-        x = Math.max(0, Math.min(x, rect.width - furniture.offsetWidth));
-        y = Math.max(0, Math.min(y, rect.height - furniture.offsetHeight));
-
-        furniture.style.left = x + 'px';
-        furniture.style.top = y + 'px';
-      });
-
-      document.addEventListener('mouseup', function () {
-        isDragging = false;
-      });
+      renderRulers(widthFt, heightFt);
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      const width = localStorage.getItem('roomWidth') || 600;
-      const height = localStorage.getItem('roomHeight') || 400;
+    function renderRulers(widthFt, heightFt) {
+      rulerTop.innerHTML = "";
+      rulerLeft.innerHTML = "";
 
-      room.style.width = width + 'px';
-      room.style.height = height + 'px';
+      // top ruler
+      const step = 1; // 1ft per tick
+      for (let x = 0; x <= widthFt; x += step) {
+        const tick = document.createElement("div");
+        tick.className = "tick";
+        tick.style.width = SCALE * step + "px";
+        tick.innerHTML = `<span>${x}ft</span>`;
+        rulerTop.appendChild(tick);
+      }
+
+      // left ruler
+      for (let y = 0; y <= heightFt; y += step) {
+        const tick = document.createElement("div");
+        tick.className = "tick";
+        tick.style.height = SCALE * step + "px";
+        tick.innerHTML = `<span>${y}ft</span>`;
+        rulerLeft.appendChild(tick);
+      }
+    }
+
+    // --- FURNITURE HELPERS ---
+    function applyFurnitureStyle(id) {
+      const f = furnitureState[id];
+      const el = f.el;
+      const wPx = f.wFt * SCALE;
+      const hPx = f.hFt * SCALE;
+      const xPx = f.xFt * SCALE;
+      const yPx = f.yFt * SCALE;
+
+      el.style.width = wPx + "px";
+      el.style.height = hPx + "px";
+      el.style.left = xPx + "px";
+      el.style.top = yPx + "px";
+
+      const sizeLabel = el.querySelector(".f-size");
+      sizeLabel.textContent = `${f.wFt.toFixed(2)}×${f.hFt.toFixed(2)} ft`;
+    }
+
+    function rectanglesOverlap(a, b) {
+      return !(
+        a.xFt + a.wFt <= b.xFt ||
+        b.xFt + b.wFt <= a.xFt ||
+        a.yFt + a.hFt <= b.yFt ||
+        b.yFt + b.hFt <= a.yFt
+      );
+    }
+
+    function canPlaceFurniture(id, newXFt, newYFt, newWFt, newHFt) {
+      const widthFt =
+        parseFloat(localStorage.getItem("roomWidthFt")) || 10;
+      const heightFt =
+        parseFloat(localStorage.getItem("roomHeightFt")) || 10;
+
+      if (
+        newXFt < 0 ||
+        newYFt < 0 ||
+        newXFt + newWFt > widthFt ||
+        newYFt + newHFt > heightFt
+      ) {
+        return false;
+      }
+
+      const newRect = { xFt: newXFt, yFt: newYFt, wFt: newWFt, hFt: newHFt };
+
+      for (const otherId in furnitureState) {
+        if (otherId === id) continue;
+        const o = furnitureState[otherId];
+        const otherRect = {
+          xFt: o.xFt,
+          yFt: o.yFt,
+          wFt: o.wFt,
+          hFt: o.hFt,
+        };
+        if (rectanglesOverlap(newRect, otherRect)) return false;
+      }
+      return true;
+    }
+
+    function tryMoveFurniture(id, newXPx, newYPx) {
+      const item = furnitureState[id];
+      const newXFt = newXPx / SCALE;
+      const newYFt = newYPx / SCALE;
+
+      if (canPlaceFurniture(id, newXFt, newYFt, item.wFt, item.hFt)) {
+        item.xFt = newXFt;
+        item.yFt = newYFt;
+        applyFurnitureStyle(id);
+      } else {
+        // revert visual
+        applyFurnitureStyle(id);
+      }
+    }
+
+    function tryResizeFurniture(id, newWFt, newHFt) {
+      const item = furnitureState[id];
+
+      if (newWFt <= 0 || newHFt <= 0) return;
+
+      if (canPlaceFurniture(id, item.xFt, item.yFt, newWFt, newHFt)) {
+        item.wFt = newWFt;
+        item.hFt = newHFt;
+        applyFurnitureStyle(id);
+      } else {
+        // keep old values in input
+        propertiesPanel.w.value = item.wFt.toFixed(2);
+        propertiesPanel.h.value = item.hFt.toFixed(2);
+      }
+    }
+
+    function setSelected(id) {
+      if (selectedId && furnitureState[selectedId]) {
+        furnitureState[selectedId].el.classList.remove("selected");
+      }
+      selectedId = id;
+
+      if (!id) {
+        propertiesPanel.name.textContent = "None";
+        propertiesPanel.w.value = "";
+        propertiesPanel.h.value = "";
+        return;
+      }
+
+      const f = furnitureState[id];
+      f.el.classList.add("selected");
+      propertiesPanel.name.textContent = f.name;
+      propertiesPanel.w.value = f.wFt.toFixed(2);
+      propertiesPanel.h.value = f.hFt.toFixed(2);
+    }
+
+    function addFurniture(name, defaultWFt, defaultHFt) {
+      const id = "f" + nextId++;
+      const el = document.createElement("div");
+      el.className = "furniture";
+      el.dataset.id = id;
+      el.innerHTML = `
+        <div class="f-title">${name}</div>
+        <div class="f-size"></div>
+      `;
+
+      roomInner.appendChild(el);
+
+      // find initial non-overlapping position (scan from 0,0)
+      let placed = false;
+      let xFt = 0;
+      let yFt = 0;
+      const widthFt =
+        parseFloat(localStorage.getItem("roomWidthFt")) || 10;
+      const heightFt =
+        parseFloat(localStorage.getItem("roomHeightFt")) || 10;
+
+      for (let yy = 0; yy + defaultHFt <= heightFt && !placed; yy += 0.5) {
+        for (let xx = 0; xx + defaultWFt <= widthFt && !placed; xx += 0.5) {
+          if (canPlaceFurniture(id, xx, yy, defaultWFt, defaultHFt)) {
+            xFt = xx;
+            yFt = yy;
+            placed = true;
+          }
+        }
+      }
+
+      furnitureState[id] = {
+        xFt,
+        yFt,
+        wFt: defaultWFt,
+        hFt: defaultHFt,
+        el,
+        name,
+      };
+      applyFurnitureStyle(id);
+      setSelected(id);
+    }
+
+    // --- EVENT LISTENERS ---
+
+    // toolbar buttons → add furniture
+    document.querySelectorAll(".tool-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const name = btn.dataset.name;
+        const wFt = parseFloat(btn.dataset.w);
+        const hFt = parseFloat(btn.dataset.h);
+        addFurniture(name, wFt, hFt);
+      });
     });
-  </script>
 
+    // select & drag furniture
+    roomInner.addEventListener("mousedown", (e) => {
+      const target = e.target.closest(".furniture");
+      if (!target) return;
+
+      const id = target.dataset.id;
+      setSelected(id);
+
+      draggingId = id;
+
+      const rect = target.getBoundingClientRect();
+      dragOffsetPx.x = e.clientX - rect.left;
+      dragOffsetPx.y = e.clientY - rect.top;
+
+      e.preventDefault();
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!draggingId) return;
+
+      const item = furnitureState[draggingId];
+      const parentRect = roomInner.getBoundingClientRect();
+
+      let newXPx = e.clientX - parentRect.left - dragOffsetPx.x;
+      let newYPx = e.clientY - parentRect.top - dragOffsetPx.y;
+
+      tryMoveFurniture(draggingId, newXPx, newYPx);
+    });
+
+    document.addEventListener("mouseup", () => {
+      draggingId = null;
+    });
+
+    // click on empty space → deselect
+    roomInner.addEventListener("click", (e) => {
+      if (!e.target.closest(".furniture")) {
+        setSelected(null);
+      }
+    });
+
+    // resize via properties panel
+    propertiesPanel.w.addEventListener("change", () => {
+      if (!selectedId) return;
+      const val = parseFloat(propertiesPanel.w.value);
+      if (!isNaN(val)) {
+        tryResizeFurniture(selectedId, val, furnitureState[selectedId].hFt);
+      }
+    });
+
+    propertiesPanel.h.addEventListener("change", () => {
+      if (!selectedId) return;
+      const val = parseFloat(propertiesPanel.h.value);
+      if (!isNaN(val)) {
+        tryResizeFurniture(selectedId, furnitureState[selectedId].wFt, val);
+      }
+    });
+
+    // --- START ---
+    initRoomSize();
+  </script>
 </body>
 </html>

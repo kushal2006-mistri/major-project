@@ -1,131 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Set Room Size - Roomify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body {
-       
-    height: 100vh;
-    margin: 0;
-    padding: 0;
-    background: url('room.png');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    overflow-x: hidden;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+        "Roboto", sans-serif;
     }
 
-
-
-    header {
-      
+    body {
+      min-height: 100vh;
       display: flex;
-      
-      justify-content: space-between;
-      
+      flex-direction: column;
+      color: #222;
+    }
+
+    /* Background image */
+    .hero {
+      position: relative;
+      flex: 1;
+      display: flex;
       align-items: center;
-      padding: 25px 50px;
-      background-color: rgba(255, 255, 255, 0.3); /* semi-transparent white */
+      justify-content: center;
+      padding: 40px 20px;
+      background-image: url("room.png"); /* ← change this */
+      background-size: cover;
+      background-position: center;
+    }
+
+    /* Top glass header bar */
+    .hero::before {
+      content: "";
       position: absolute;
       top: 0;
-      width: 100%;
-      backdrop-filter: blur(5px);
+      left: 0;
+      right: 0;
+      height: 70px;
+      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.35);
     }
 
-    header h1 {
-      margin: 0;
-      font-size: 2.5rem;
+    .logo {
+      position: absolute;
+      top: 18px;
+      left: 40px;
+      font-size: 28px;
+      font-weight: 600;
       letter-spacing: 2px;
     }
 
-    .container {
-      background: white;
-      padding: 40px 30px;
-      border-radius: 20px;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-      text-align: center;
-      width: 400px;
-
-      margin: 60px auto 0 auto;  /* ✅ Center horizontally */
-    }
-    .glass-footer p {
-      text-shadow: 0 0 5px #2f4f5f;
-}
-    .glass-footer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
+    /* Center card */
+    .card {
+      position: relative;
+      max-width: 520px;
       width: 100%;
-}
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.22);
+      padding: 40px 38px 32px;
+      text-align: center;
+    }
 
-    .container input {
+    .card h1 {
+      font-size: 26px;
+      margin-bottom: 28px;
+      font-weight: 600;
+    }
+
+    .form-group {
+      text-align: left;
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
       display: block;
-      width: 250px;
-      margin: 15px auto;
-      padding: 10px;
-      font-size: 16px;
-      border: 2px solid #0077b6;
-      border-radius: 10px;
-      outline: none;
+      font-size: 14px;
+      margin-bottom: 6px;
     }
 
-    .container button {
-      margin-top: 20px;
-      padding: 12px 25px;
-      background-color: #0077b6;
-      color: white;
-      font-size: 16px;
+    .input-wrapper {
+      border-radius: 10px;
+      border: 2px solid #0085d8;
+      padding: 10px 14px;
+      background-color: #ffffff;
+    }
+
+    .input-wrapper input {
+      width: 100%;
       border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      outline: none;
+      font-size: 15px;
     }
 
-    .container button:hover {
-      transform: scale(1.07);
-      background-color: #023e8a;
+    .input-wrapper input::placeholder {
+      color: #999;
     }
-    
+
+    .btn {
+      margin-top: 24px;
+      display: inline-block;
+      padding: 11px 26px;
+      border-radius: 999px;
+      border: none;
+      background: #0085d8;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: 0 8px 18px rgba(0, 133, 216, 0.4);
+    }
+
+    .btn:hover {
+      background: #0072b8;
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(0, 133, 216, 0.55);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    footer {
+      padding: 10px 18px 14px;
+      font-size: 13px;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.85);
+    }
+
+    @media (max-width: 600px) {
+      .card {
+        padding: 30px 22px 26px;
+      }
+      .card h1 {
+        font-size: 22px;
+      }
+      .logo {
+        left: 20px;
+        font-size: 22px;
+      }
+    }
   </style>
 </head>
 <body>
+  <main class="hero">
+    <div class="logo">Roomify</div>
 
-  <header>
-    <h1>Roomify</h1>
-  </header>
+    <section class="card">
+      <h1>Set Your Room Dimensions</h1>
 
-  <div class="container">
-    <h2>Set Your Room Dimensions</h2>
-    <input id="roomWidth" type="number" placeholder="Width (in px)">
-    <input id="roomHeight" type="number" placeholder="Height (in px)">
-    <button onclick="goToPlanner()">Create Room</button>
-  </div>
+      <form id="room-form">
+        <div class="form-group">
+          <label for="width">Width (in px)</label>
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="width"
+              placeholder="Width (in px)"
+              min="1"
+              required
+            />
+          </div>
+        </div>
 
-  <script>
-    function goToPlanner() {
-      const width = document.getElementById('roomWidth').value;
-      const height = document.getElementById('roomHeight').value;
+        <div class="form-group">
+          <label for="height">Height (in px)</label>
+          <div class="input-wrapper">
+            <input
+              type="number"
+              id="height"
+              placeholder="Height (in px)"
+              min="1"
+              required
+            />
+          </div>
+        </div>
 
-      if (!width || !height || width <= 0 || height <= 0) {
-        alert("Please enter valid positive values for width and height.");
-        return;
-      }
+        <button type="submit" class="btn">Create Room</button>
+      </form>
+    </section>
+  </main>
 
-      localStorage.setItem('roomWidth', width);
-      localStorage.setItem('roomHeight', height);
-      window.location.href = 'room1.html';
-    }
-  </script>
-  <footer class="glass-footer">
-        <p>&copy; 2025 Roomify. All Rights Reserved.</p>
+  <footer>
+    © 2025 Roomify, All Rights Reserved.
   </footer>
 
+  
+    <script>
+  const form = document.getElementById("room-form");
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const width = parseFloat(document.getElementById("width").value);
+    const height = parseFloat(document.getElementById("height").value);
+
+    if (!width || !height || width <= 0 || height <= 0) {
+      alert("Please enter valid width and height.");
+      return;
+    }
+
+    // ✅ feet dhore save korchi
+    localStorage.setItem("roomWidthFt", width);
+    localStorage.setItem("roomHeightFt", height);
+
+    // designer page e jao
+    window.location.href = "room1.html";
+  });
+
+
+  </script>
 </body>
 </html>
