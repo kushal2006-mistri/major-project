@@ -140,6 +140,7 @@ header h1 { font-size: 20px; }
 <div id="app">
 
   <aside id="left-panel">
+    <button id="draw-wall-btn" style="margin-bottom: 10px;">Draw Wall</button>
     <h3>Furniture</h3>
     <div class="f-item" draggable="true" data-name="Chair" data-w="40" data-h="40">Chair</div>
     <div class="f-item" draggable="true" data-name="Table" data-w="60" data-h="60">Table</div>
@@ -166,6 +167,15 @@ header h1 { font-size: 20px; }
 <script>
 /* ================= CONFIG ================= */
 const PIXELS_PER_FOOT = 20;
+let wallDrawMode = false;
+let wallStartPoint = null;
+
+/* ================= WALL DRAWING Mode ================= */
+document.getElementById("draw-wall-btn").onclick = () => {
+  wallDrawMode = true;
+  wallStartPoint = null;
+  canvas.style.cursor = "crosshair";
+};
 
 /* ================= ROOM ================= */
 const svg = document.getElementById("svg");
@@ -210,6 +220,20 @@ function drawRoom() {
       vertices.splice(i+1, 0, { x:(a.x+b.x)/2, y:(a.y+b.y)/2 });
       drawRoom();
     };
+
+    line.onclick = (e) => {
+      if (!wallDrawMode) return;
+
+      const r = svg.getBoundingClientRect();
+      const x = e.clientX - r.left;
+      const y = e.clientY - r.top;
+
+      vertices.splice(i+1, 0, { x, y });
+
+      wallDrawMode = false;
+      svg.style.cursor = "default";
+      drawRoom();
+    }
     svg.appendChild(line);
 
     const len = Math.hypot(b.x-a.x, b.y-a.y) / PIXELS_PER_FOOT;
@@ -268,6 +292,16 @@ function pointInPolygon(p, poly) {
   }
   return inside;
 }
+function rectInsidePolygon(x, y, w, h, poly) {
+  const corners = [
+    { x: x,     y: y },
+    { x: x + w, y: y },
+    { x: x + w, y: y + h },
+    { x: x,     y: y + h }
+  ];
+  return corners.every(pt => pointInPolygon(pt, poly));
+}
+
 
 function overlap(id,x,y,w,h){
   for(const k in furniture){
@@ -333,7 +367,11 @@ document.addEventListener("mousemove",e=>{
   const ny=e.clientY-r.top-offset.y;
   const c={x:nx+it.w/2,y:ny+it.h/2};
 
-  if(pointInPolygon(c,vertices) && !overlap(draggingFurniture,nx,ny,it.w,it.h)){
+ if(
+  rectInsidePolygon(nx, ny, it.w, it.h, vertices) &&
+  !overlap(draggingFurniture, nx, ny, it.w, it.h)
+){
+
     it.el.style.left=nx+"px";
     it.el.style.top=ny+"px";
   }
@@ -348,7 +386,11 @@ const h = Math.round(Number(rh.value));
   const x=parseFloat(it.el.style.left), y=parseFloat(it.el.style.top);
   const c={x:x+w/2,y:y+h/2};
 
-  if(pointInPolygon(c,vertices) && !overlap(selected,x,y,w,h)){
+  if(
+  rectInsidePolygon(x, y, w, h, vertices) &&
+  !overlap(selected, x, y, w, h)
+){
+
     it.w=w; it.h=h;
     it.el.style.width=w+"px";
     it.el.style.height=h+"px";
